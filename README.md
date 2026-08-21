@@ -9,8 +9,7 @@ from four different angles? Mark it once and go straight back to it, every time.
 ![Replay Deck](ReplayDeck.png)
 
 <!-- Path is ReplayDeck.png, NOT deck/ReplayDeck.png. This file is copied to the PUBLIC repo,
-     where the screenshot sits at the root; only the source repo has it under deck\. It was
-     wrong from launch and the image was broken on the download page for every release. -->
+     where the screenshot sits at the root; only the source repo has it under deck/. -->
 
 ---
 
@@ -99,6 +98,17 @@ fortnight in an issue tracker. It is also where new builds land first, so it is 
 be if you want fixes before everyone else.
 
 Bugs, ideas and "it did something weird" are all welcome.
+
+---
+
+## Licence
+
+Free to use, but not open source. You may **not** redistribute the file, repackage it, sell
+it, or reverse-engineer it — share the Discord link instead. Full terms in
+[LICENSE.txt](LICENSE.txt).
+
+It is an independent tool and is **not affiliated with Eagle Dynamics**. It drives DCS for
+you and comes with no warranty; you use it at your own risk.
 
 ---
 

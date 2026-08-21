@@ -1,0 +1,122 @@
+DCS REPLAY DECK — END USER LICENCE AGREEMENT
+=============================================
+
+Copyright (c) SYNTAX. All rights reserved.
+
+This End User Licence Agreement ("Agreement") is a legal agreement between you
+("you") and SYNTAX ("the Author") for the DCS Replay Deck software, including the
+executable, its embedded components, and the accompanying documentation (together,
+"the Software").
+
+By downloading, installing, or using the Software, you agree to be bound by this
+Agreement. If you do not agree, do not install or use the Software.
+
+
+1. LICENCE GRANTED
+------------------
+The Author grants you a personal, non-exclusive, non-transferable, revocable licence
+to install and use the Software, free of charge, on computers you own or control, for
+your own personal use in connection with DCS World.
+
+
+2. WHAT YOU MAY NOT DO
+----------------------
+Except to the extent that the following restrictions are prohibited by applicable law,
+or permitted by a separate written agreement signed by the Author, you may NOT:
+
+  (a) reverse engineer, decompile, disassemble, or otherwise attempt to derive the
+      source code, underlying ideas, or internal structure of the Software, or defeat
+      or circumvent any technical measures that protect it;
+
+  (b) modify, adapt, translate, or create derivative works based on the Software;
+
+  (c) redistribute, publish, mirror, re-host, repackage, bundle, or otherwise make the
+      Software available to any third party. Share the official download link instead
+      — see Section 3;
+
+  (d) sell, rent, lease, sublicense, or otherwise commercially exploit the Software, or
+      charge any fee for access to it;
+
+  (e) remove, alter, or obscure any copyright, trademark, authorship, or other
+      proprietary notice in or on the Software; or
+
+  (f) represent the Software, or any work derived from it, as your own.
+
+Nothing in this Agreement prevents you from making or sharing videos, screenshots, or
+other content created WITH the Software.
+
+
+3. DISTRIBUTION
+---------------
+The Software is distributed only through the Author's official channels. The current
+official download and support location is the Author's Discord:
+
+    https://discord.gg/PGfmpJMeY5
+
+You are welcome — encouraged — to point others to that link. You may not distribute the
+Software file itself by any other means.
+
+
+4. OWNERSHIP
+------------
+The Software is licensed, not sold. The Author retains all right, title, and interest
+in and to the Software, including all intellectual property rights. No rights are
+granted to you other than as expressly set out in this Agreement.
+
+
+5. NO WARRANTY
+--------------
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+PARTICULAR PURPOSE, AND NON-INFRINGEMENT.
+
+The Software automates track replay in DCS World by controlling the running game. You
+use it at your own risk. The Author does not warrant that it will be error-free, that
+it will not affect DCS World or your saved data, or that it is suitable for any
+particular purpose.
+
+
+6. LIMITATION OF LIABILITY
+--------------------------
+To the maximum extent permitted by applicable law, in no event shall the Author be
+liable for any indirect, incidental, special, consequential, or punitive damages, or
+for any loss of data, profits, or goodwill, arising out of or in connection with your
+use of, or inability to use, the Software — even if the Author has been advised of the
+possibility of such damages.
+
+Nothing in this Agreement excludes or limits liability that cannot be excluded or
+limited under applicable law (for example, liability for death or personal injury
+caused by negligence, or for fraud).
+
+
+7. NOT AFFILIATED WITH EAGLE DYNAMICS
+-------------------------------------
+The Software is an independent, unofficial tool. It is not created, endorsed by, or
+affiliated with Eagle Dynamics SA or The Fighter Collection. "DCS World" and related
+marks are the property of their respective owners.
+
+
+8. TERMINATION
+--------------
+This licence applies until terminated. It terminates automatically, without notice, if
+you breach any term of this Agreement. On termination you must stop using the Software
+and delete all copies in your possession. Sections 2, 4, 5, 6, and 9 survive
+termination.
+
+
+9. GOVERNING LAW
+----------------
+This Agreement is governed by the laws of England and Wales, and the courts of England
+and Wales have exclusive jurisdiction, except that the Author may seek injunctive
+relief in any jurisdiction.
+
+
+10. ENTIRE AGREEMENT
+--------------------
+This Agreement is the entire agreement between you and the Author regarding the
+Software, and supersedes any prior understanding. If any provision is held
+unenforceable, the remaining provisions remain in full force.
+
+-----------------------------------------------------------------------------------
+For permissions beyond the scope of this licence — commercial use, redistribution, or
+anything not allowed above — contact the Author through the Discord above.

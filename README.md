@@ -6,7 +6,11 @@ shows you where every missile launch happened.
 Built for making video. Miss the shot? Jump back thirty seconds. Want that AMRAAM launch
 from four different angles? Mark it once and go straight back to it, every time.
 
-![Replay Deck](deck/ReplayDeck.png)
+![Replay Deck](ReplayDeck.png)
+
+<!-- Path is ReplayDeck.png, NOT deck/ReplayDeck.png. This file is copied to the PUBLIC repo,
+     where the screenshot sits at the root; only the source repo has it under deck\. It was
+     wrong from launch and the image was broken on the download page for every release. -->
 
 ---
 
@@ -83,11 +87,18 @@ saved per mission, so it is a one-time cost per track.
 - DCS World
 - Nothing else. The exe is self-contained; no .NET install needed.
 
-## Support
+## Support and bug reports
 
-Come and say hello in Discord — bugs, ideas and "it did something weird" all welcome.
+**Support and bug reports go through Discord, not GitHub issues.**
 
 **https://discord.gg/PGfmpJMeY5**
+
+That is where problems actually get solved. Nearly every report needs a follow-up question —
+which track, which DCS folder, what the log says — and that is two minutes in Discord and a
+fortnight in an issue tracker. It is also where new builds land first, so it is the place to
+be if you want fixes before everyone else.
+
+Bugs, ideas and "it did something weird" are all welcome.
 
 ---
 

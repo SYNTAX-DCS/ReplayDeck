@@ -69,6 +69,20 @@ In OBS: **Tools → WebSocket Server Settings → Enable**, then **Show Connect 
 password. In the deck, click **OBS**, paste it, connect. The password is stored encrypted on
 your own machine and never leaves it. Then the ● on any mark records it to a clip.
 
+## Security & privacy
+
+Replay Deck is closed source, so **[SECURITY.md](SECURITY.md)** states exactly what it does on
+your machine — every file it writes, every socket it opens (all localhost), and the fact that
+it is not a keylogger (it uses `RegisterHotKey`, so it only ever sees the five `Ctrl+Alt`
+shortcuts, never anything else you type). It makes **no external network connections**.
+
+The DCS-side hook — the only code that runs inside DCS — is published in full:
+**[ReplayDeck.lua](ReplayDeck.lua)**. The exe installs that exact file, so you can diff it
+against what lands in your `Scripts\Hooks` folder.
+
+Every release has a published SHA-256, and the current build is clean on
+[VirusTotal (0/70)](https://www.virustotal.com/gui/file/aa1542aab4b139c9ee586bff92034c50074f9a3c66f379a1dbb9085d79db3e04).
+
 ## Requirements
 
 - Windows

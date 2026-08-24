@@ -34,6 +34,8 @@ check.
 - **Rewind** — jump back 10s / 30s / 60s / 5m, or a custom amount, from wherever you are
 - **Marks** — pause, name a moment, and jump straight back to it any time. Lands early so you
   catch the run-up
+- **Jump to any moment** — drag along the timeline to the point you want, hit **go to**, and
+  the deck drops a mark there and runs you straight to it, hands-off
 - **Record to video** — connect OBS once, then record any mark (or *every* mark, unattended)
   straight to a clip. It seeks, captures the run-up and the moment, and stops on its own
 - **Live events on a timeline** — every launch, hit, kill and ejection appears as it happens,

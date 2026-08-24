@@ -31,7 +31,7 @@ keystroke — it is not technically capable of it. This is **not** a low-level k
 you can confirm it from the published hook and the behaviour of the app.
 
 Separately, the deck **sends** synthesised keystrokes **to DCS** (the time-acceleration keys
-and the F2/F10 view keys) when you drive a seek or change speed. That is why an automated
+and the view keys F2/F6/F7/F10) when you drive a seek or change speed. That is why an automated
 sandbox may tag "input manipulation" — it is the tool doing its one job: driving the replay.
 It only sends to whatever window has focus while a seek is running, and only those keys.
 
@@ -63,6 +63,7 @@ unaffected. What it does write:
 | `%LOCALAPPDATA%\DCS-Replay-Deck\marks\*.json` | Your named marks, per track. |
 | `%LOCALAPPDATA%\DCS-Replay-Deck\events\*.json` | The event list DCS reported, per track (cached so you do not re-scan). |
 | `%LOCALAPPDATA%\DCS-Replay-Deck\seek.log` | A diagnostic log of seeks. Local only. |
+| `%LOCALAPPDATA%\DCS-Replay-Deck\crash.log` | Written only if the app hits an unexpected error: a timestamped stack trace so the bug can be fixed. Local only. |
 | `<track>-unlocked.trk` | Only when you click **Unlock** — a copy of a chosen track with view restrictions removed. Your original is never modified. |
 
 OBS video clips are written by **OBS**, to OBS's own recording folder — Replay Deck only tells
@@ -95,10 +96,12 @@ The hook is the only part of Replay Deck that executes inside your DCS process, 
 published in full: [**ReplayDeck.lua**](ReplayDeck.lua). The exe installs this exact file; you
 can diff it against what lands in your `Scripts\Hooks` folder.
 
-It is a read-only reporter plus a command receiver. It reads DCS's model time and mission
-info and sends them out on UDP loopback; it receives pause / resume / restart / seek commands
-back. It does not modify your mission, read your files, or change DCS beyond what replaying a
-track already does.
+It is a read-only reporter plus a command receiver. It reads DCS's model time, mission info,
+and — during a replay — the list of objects in the mission (unit and weapon types, names and
+positions) so it can put launches and kills on the timeline as they happen. All of that is
+sent out on UDP loopback; it receives pause / resume / restart / seek commands back. It does
+not modify your mission, read your files, or change DCS beyond what replaying a track already
+does. Everything it reads is already on your screen in the F10 map.
 
 ## Verify it yourself
 

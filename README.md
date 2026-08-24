@@ -36,8 +36,8 @@ check.
   catch the run-up
 - **Record to video** — connect OBS once, then record any mark (or *every* mark, unattended)
   straight to a clip. It seeks, captures the run-up and the moment, and stops on its own
-- **Events on a timeline** — every launch, hit, kill and ejection from DCS's own data,
-  colour-coded and filterable, and every one seeks you there. No Tacview needed
+- **Live events on a timeline** — every launch, hit, kill and ejection appears as it happens,
+  colour-coded and filterable, each with a **go** button that seeks you there. No Tacview needed
 - **Global hotkeys** — mark, pause and jump between marks without alt-tabbing out of DCS
 - **Unlock restricted tracks** — one click makes a watchable copy of a view-locked
   multiplayer track. Your original is never touched
@@ -58,10 +58,10 @@ minutes — the deck tells you how long while it runs.
 
 ## Where the event markers come from
 
-DCS's own debriefing data, not Tacview. No export step, no extra software, and it works on
-tracks you flew months ago. Events appear **after a replay pass finishes**, because that is
-when DCS writes them — run a track through once, or seek to the end, and every event is on the
-timeline from then on. Saved per mission, so it is a one-time cost per track.
+The sim itself, live — not Tacview. The deck watches the replay as it plays and marks every
+launch, hit and kill **the instant it happens**, so the timeline fills in while you watch. No
+export step, no extra software. Older tracks you flew months ago fill in the moment you replay
+them, and events are saved per track so they're there next time you open it.
 
 ## Recording with OBS
 

@@ -144,6 +144,178 @@ local function send(msg)
 end
 
 -- =====================================================================================
+-- live world-watcher  (real-time events)
+-- =====================================================================================
+-- Where the timeline's events come from now.
+--
+-- DCS only writes Logs\debrief.log when a replay PASS ENDS -- which is exactly why events
+-- used to appear only after a restart or a seek, never as you watched. The camera probe
+-- proved the Export world API is reachable from this hook state during a replay, so instead
+-- of waiting for the debrief we watch the world ourselves: poll every object a few times a
+-- second, and when a weapon APPEARS that is a shot, when a unit VANISHES that is a kill.
+-- Each one streams to the deck the instant it happens, at the model time it happened.
+--
+-- FIRST RUN IS SELF-DOCUMENTING. LoGetWorldObjects' exact shape is not a thing to guess at
+-- (two callback names each cost a sortie on this project). So the first few objects are
+-- dumped in full and every emitted event is logged, capped, under REPLAYDECK -- one replay's
+-- log says exactly what the objects look like and whether the shot/kill split is right.
+-- Expect the first flight to be a little noisy (chaff and flares may read as "shot" until the
+-- log tells us their type names); that run is the calibration.
+local WORLD_POLL_FRAMES = 20    -- ~0.13s at 150 fps; a missile in flight lasts far longer
+local WORLD_LOG_CAP     = 80
+
+local world = { prev = nil, polls = 0, logged = 0, dump_n = 0, newdump = 0, dumped = false, warned = false }
+
+local function resolve_world()
+    if type(_G.LoGetWorldObjects) == "function" then return _G.LoGetWorldObjects end
+    if type(_G.Export) == "table" and type(_G.Export.LoGetWorldObjects) == "function" then
+        return _G.Export.LoGetWorldObjects
+    end
+    return nil
+end
+
+-- A unit carries a UnitName; a weapon does not. This is the v1 discriminator; the schema dump
+-- below is what confirms or corrects it.
+local function obj_is_unit(o)
+    return type(o.UnitName) == "string" and #o.UnitName > 0
+end
+
+-- Clean a free-text field down to what the space-separated wire format allows.
+local function clean(s)
+    s = tostring(s):gsub("%s+", "_"):gsub("[^%w_%-%.]", "")
+    if #s > 32 then s = s:sub(1, 32) end
+    return s
+end
+
+-- The object's TYPE name (AGM_88, M-1_Abrams), or nil if it has none. This is the signal that
+-- separates a real weapon from the nameless burst objects -- chaff, flares and gun rounds --
+-- that flooded the first run as "shot obj".
+local function obj_name(o)
+    if type(o.Name) == "string" and #o.Name > 0 then return clean(o.Name) end
+    return nil
+end
+
+-- The unit's own name/callsign (BIGWILD, BLUE_LINE_SENAKI-1), or nil. Units carry one; weapons
+-- and noise objects do not.
+local function obj_unitname(o)
+    if type(o.UnitName) == "string" and #o.UnitName > 0 then return clean(o.UnitName) end
+    return nil
+end
+
+local function obj_side(o)
+    return tonumber(o.CoalitionID) or tonumber(o.Coalition) or 0
+end
+
+local function emit_poi(t, kind, side, label)
+    side = tonumber(side) or 0
+    if not label or #label == 0 then label = kind end
+    send(string.format("POI t=%.3f kind=%s side=%d label=%s", t, kind, side, label))
+    if world.logged < WORLD_LOG_CAP then
+        world.logged = world.logged + 1
+        say("world POI #%d: t=%.2f kind=%s side=%d label=%s", world.logged, t, kind, side, label)
+    end
+end
+
+-- One-level field dump, so the real schema of an object is on record after a single replay --
+-- including subtables like Type (the category), Position and Flags.
+local function dump_object(id, o)
+    local bits = {}
+    pcall(function()
+        for k, v in pairs(o) do
+            local tv = type(v)
+            if tv ~= "table" and tv ~= "function" then
+                bits[#bits + 1] = tostring(k) .. "=" .. tostring(v)
+            elseif tv == "table" then
+                local sub = {}
+                pcall(function()
+                    for sk, sv in pairs(v) do
+                        if type(sv) ~= "table" and type(sv) ~= "function" then
+                            sub[#sub + 1] = tostring(sk) .. "=" .. tostring(sv)
+                        end
+                        if #sub >= 8 then break end
+                    end
+                end)
+                bits[#bits + 1] = tostring(k) .. "={" .. table.concat(sub, ",") .. "}"
+            end
+        end
+    end)
+    say("world OBJ %s: %s", tostring(id), table.concat(bits, "  "))
+end
+
+local function poll_world(now)
+    if type(now) ~= "number" then return end
+    local get = resolve_world()
+    if not get then
+        if not world.warned then
+            world.warned = true
+            say("world: no LoGetWorldObjects reachable here -- live events off")
+        end
+        return
+    end
+
+    local ok, objs = pcall(get)
+    if not ok or type(objs) ~= "table" then
+        if not world.warned then
+            world.warned = true
+            say("world: LoGetWorldObjects failed (ok=%s type=%s) -- live events off",
+                tostring(ok), type(objs))
+        end
+        return
+    end
+
+    local cur, count = {}, 0
+    for id, o in pairs(objs) do
+        if type(o) == "table" then
+            count = count + 1
+            local prev = world.prev and world.prev[id]
+            cur[id] = {
+                unit  = obj_is_unit(o),
+                name  = obj_name(o),        -- type name, or nil
+                uname = obj_unitname(o),    -- unit name, or nil
+                side  = obj_side(o),
+                seen  = (prev and prev.seen or 0) + 1,   -- consecutive polls present
+            }
+            if not world.dumped and world.dump_n < 4 then
+                world.dump_n = world.dump_n + 1
+                dump_object(id, o)
+            end
+        end
+    end
+    if not world.dumped then
+        world.dumped = true
+        say("world: first poll saw %d objects", count)
+    end
+
+    world.polls = world.polls + 1
+
+    -- Diff against the previous snapshot. Warm up for two polls so the initial population settles.
+    if world.prev and world.polls > 2 then
+        -- New weapons -> shots. A real weapon carries a type Name; the nameless burst objects
+        -- (chaff, flares, gun rounds) are dropped. The first few nameless newcomers are dumped
+        -- so the log shows exactly what they are, in case a real weapon ever lacks a name.
+        for id, info in pairs(cur) do
+            if info.seen == 1 and not info.unit then
+                if not info.name and world.newdump < 8 then
+                    world.newdump = world.newdump + 1
+                    dump_object("NEW-nameless " .. tostring(id), objs[id])
+                end
+                if info.name then emit_poi(now, "shot", info.side, info.name) end
+            end
+        end
+        -- Vanished units -> kills. Named units only, and only those that had been present for a
+        -- few polls -- so a unit flickering in and out of the sim's known set (that first poll
+        -- saw just 24 of the mission's units) is not misread as a death.
+        for id, info in pairs(world.prev) do
+            if not cur[id] and info.unit and info.uname and (info.seen or 0) >= 3 then
+                emit_poi(now, "kill", info.side, info.uname)
+            end
+        end
+    end
+
+    world.prev = cur
+end
+
+-- =====================================================================================
 -- commands
 -- =====================================================================================
 local function do_restart()
@@ -300,6 +472,14 @@ local function pump()
             measure(m, r)
             st.m_prev, st.r_prev = m, r
         end
+    end
+
+    -- Live world-watcher: real-time events straight from the sim (see the section above).
+    -- Only during a replay, and not mid-seek -- a fast-forward would flood, and the deck is
+    -- looking at the F10 map then anyway. isTrackPlaying is only asked once per poll interval.
+    if st.frames % WORLD_POLL_FRAMES == 0 and not seek.active then
+        local playing = select(2, pcall(function() return DCS.isTrackPlaying() end))
+        if playing then pcall(poll_world, m) end
     end
 
     -- Publish at ~10 Hz. The deck interpolates the clock between packets, so this is

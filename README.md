@@ -44,6 +44,8 @@ check.
 - **Unlock restricted tracks** — one click makes a watchable copy of a view-locked
   multiplayer track. Your original is never touched
 - **Slow motion** — down to 1/4× for missile impacts
+- **One-click updates** — click the version number to check GitHub for a newer build and install it
+  in a single click. No background checking; it only looks when you ask
 
 ## About rewind
 
@@ -74,9 +76,11 @@ your own machine and never leaves it. Then the ● on any mark records it to a c
 ## Security & privacy
 
 Replay Deck is closed source, so **[SECURITY.md](SECURITY.md)** states exactly what it does on
-your machine — every file it writes, every socket it opens (all localhost), and the fact that
+your machine — every file it writes, every socket it opens, and the fact that
 it is not a keylogger (it uses `RegisterHotKey`, so it only ever sees the five `Ctrl+Alt`
-shortcuts, never anything else you type). It makes **no external network connections**.
+shortcuts, never anything else you type). Its working sockets are all localhost; the **only**
+time it reaches the internet is when **you** click **Check for updates**, which asks GitHub if
+there's a newer build and downloads it if you choose. No telemetry, nothing in the background.
 
 The DCS-side hook — the only code that runs inside DCS — is published in full:
 **[ReplayDeck.lua](ReplayDeck.lua)**. The exe installs that exact file, so you can diff it

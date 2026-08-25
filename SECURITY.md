@@ -35,11 +35,11 @@ and the view keys F2/F6/F7/F10) when you drive a seek or change speed. That is w
 sandbox may tag "input manipulation" — it is the tool doing its one job: driving the replay.
 It only sends to whatever window has focus while a seek is running, and only those keys.
 
-## Network — localhost only, nothing leaves your machine
+## Network — localhost only, plus one update check you trigger yourself
 
-Replay Deck makes **no external network connections**. There is no telemetry, no analytics,
-no update check, no "phone home", no account, no server. The only sockets it opens are on the
-loopback interface (`127.0.0.1`):
+Replay Deck opens **no network connection on its own**. There is no telemetry, no analytics,
+no background "phone home", no account, no server. Its working sockets are all on the loopback
+interface (`127.0.0.1`):
 
 | Purpose | Socket |
 |---|---|
@@ -47,9 +47,16 @@ loopback interface (`127.0.0.1`):
 | Send commands to the DCS hook | UDP `127.0.0.1:31491` |
 | Talk to OBS (only if you enable recording) | WebSocket to `127.0.0.1:4455` (host/port you set) |
 
-If you scan the exe on VirusTotal you may see one contacted IP (a Cloudflare address). That
-is the **.NET runtime's** own certificate/connectivity check, not this application — the app
-contains no HTTP or web client code at all.
+**The one exception is the update check, and only when you ask for it.** Clicking the version
+number (top-left), or **Check for updates**, contacts GitHub — `api.github.com` to read the
+latest release number, and `github.com` to download the new exe if you choose to install it. It
+sends nothing about you or your machine: no identifiers, no usage, no query beyond "what is the
+latest release". Nothing reaches the network unless you click it, and the exe it downloads is the
+same file published on the releases page, with the same SHA-256.
+
+If you scan the exe on VirusTotal you may see a contacted IP (a Cloudflare address); that is the
+**.NET runtime's** own certificate/connectivity check. The only application code that opens an
+outbound connection is the update check above, and only on your click.
 
 ## Files it writes
 

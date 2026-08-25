@@ -1,11 +1,11 @@
-# Security & privacy — DCS Replay Deck
+# Security & privacy - DCS Replay Deck
 
 Replay Deck is closed source, so this document states exactly what it does on your machine.
 It is deliberately exhaustive and boring. If anything here turns out to be wrong, that is a
-bug — report it in the Discord and it will be fixed.
+bug - report it in the Discord and it will be fixed.
 
 Every release ships a published **SHA-256** so you can verify the exact file you downloaded,
-and the DCS-side hook (the only code that runs inside DCS) is published in full — see the
+and the DCS-side hook (the only code that runs inside DCS) is published in full - see the
 bottom of this document. The current release has been scanned by ~70 antivirus engines with
 zero detections: [VirusTotal report](https://www.virustotal.com/gui/file/aa1542aab4b139c9ee586bff92034c50074f9a3c66f379a1dbb9085d79db3e04).
 
@@ -26,16 +26,16 @@ with the Windows **`RegisterHotKey`** API for exactly five combinations, all `Ct
 
 With `RegisterHotKey`, Windows notifies the application **only** when one of those exact
 combinations is pressed. The app never receives, sees, records, or transmits any other
-keystroke — it is not technically capable of it. This is **not** a low-level keyboard hook
+keystroke - it is not technically capable of it. This is **not** a low-level keyboard hook
 (`WH_KEYBOARD_LL`), which *would* see everything you type; that was avoided on purpose, and
 you can confirm it from the published hook and the behaviour of the app.
 
 Separately, the deck **sends** synthesised keystrokes **to DCS** (the time-acceleration keys
 and the view keys F2/F6/F7/F10) when you drive a seek or change speed. That is why an automated
-sandbox may tag "input manipulation" — it is the tool doing its one job: driving the replay.
+sandbox may tag "input manipulation" - it is the tool doing its one job: driving the replay.
 It only sends to whatever window has focus while a seek is running, and only those keys.
 
-## Network — localhost only, plus one update check you trigger yourself
+## Network - localhost only, plus one update check you trigger yourself
 
 Replay Deck opens **no network connection on its own**. There is no telemetry, no analytics,
 no background "phone home", no account, no server. Its working sockets are all on the loopback
@@ -48,7 +48,7 @@ interface (`127.0.0.1`):
 | Talk to OBS (only if you enable recording) | WebSocket to `127.0.0.1:4455` (host/port you set) |
 
 **The one exception is the update check, and only when you ask for it.** Clicking the version
-number (top-left), or **Check for updates**, contacts GitHub — `api.github.com` to read the
+number (top-left), or **Check for updates**, contacts GitHub - `api.github.com` to read the
 latest release number, and `github.com` to download the new exe if you choose to install it. It
 sends nothing about you or your machine: no identifiers, no usage, no query beyond "what is the
 latest release". Nothing reaches the network unless you click it, and the exe it downloads is the
@@ -65,15 +65,15 @@ unaffected. What it does write:
 
 | Path | What |
 |---|---|
-| `Saved Games\DCS\Scripts\Hooks\ReplayDeck.lua` | The DCS-side hook, self-installed on first run and re-checked each launch. **Published in full — see below.** |
+| `Saved Games\DCS\Scripts\Hooks\ReplayDeck.lua` | The DCS-side hook, self-installed on first run and re-checked each launch. **Published in full - see below.** |
 | `%LOCALAPPDATA%\DCS-Replay-Deck\settings.json` | Your DCS folder, OBS host/port/lead/trail, window position, custom-rewind amount. The OBS password is stored **encrypted** (see below). |
 | `%LOCALAPPDATA%\DCS-Replay-Deck\marks\*.json` | Your named marks, per track. |
 | `%LOCALAPPDATA%\DCS-Replay-Deck\events\*.json` | The event list DCS reported, per track (cached so you do not re-scan). |
 | `%LOCALAPPDATA%\DCS-Replay-Deck\seek.log` | A diagnostic log of seeks. Local only. |
 | `%LOCALAPPDATA%\DCS-Replay-Deck\crash.log` | Written only if the app hits an unexpected error: a timestamped stack trace so the bug can be fixed. Local only. |
-| `<track>-unlocked.trk` | Only when you click **Unlock** — a copy of a chosen track with view restrictions removed. Your original is never modified. |
+| `<track>-unlocked.trk` | Only when you click **Unlock** - a copy of a chosen track with view restrictions removed. Your original is never modified. |
 
-OBS video clips are written by **OBS**, to OBS's own recording folder — Replay Deck only tells
+OBS video clips are written by **OBS**, to OBS's own recording folder - Replay Deck only tells
 OBS when to start and stop.
 
 ## The OBS password
@@ -94,17 +94,17 @@ with Windows.
 
 To do its job it reads: your DCS `Saved Games` folder (to find tracks and read the debrief log
 for events), the running process list (to find the DCS window), and standard user folder
-paths. This is why a sandbox may tag "system/user discovery" — it is finding DCS and your
+paths. This is why a sandbox may tag "system/user discovery" - it is finding DCS and your
 tracks, nothing more.
 
-## The DCS hook — the code that runs inside DCS
+## The DCS hook - the code that runs inside DCS
 
 The hook is the only part of Replay Deck that executes inside your DCS process, so it is
 published in full: [**ReplayDeck.lua**](ReplayDeck.lua). The exe installs this exact file; you
 can diff it against what lands in your `Scripts\Hooks` folder.
 
 It is a read-only reporter plus a command receiver. It reads DCS's model time, mission info,
-and — during a replay — the list of objects in the mission (unit and weapon types, names and
+and - during a replay - the list of objects in the mission (unit and weapon types, names and
 positions) so it can put launches and kills on the timeline as they happen. All of that is
 sent out on UDP loopback; it receives pause / resume / restart / seek commands back. It does
 not modify your mission, read your files, or change DCS beyond what replaying a track already
@@ -113,8 +113,8 @@ does. Everything it reads is already on your screen in the F10 map.
 ## Verify it yourself
 
 1. Check the download's SHA-256 against the value in the user guide / pinned post.
-2. Scan the exe — [VirusTotal report](https://www.virustotal.com/gui/file/aa1542aab4b139c9ee586bff92034c50074f9a3c66f379a1dbb9085d79db3e04).
+2. Scan the exe - [VirusTotal report](https://www.virustotal.com/gui/file/aa1542aab4b139c9ee586bff92034c50074f9a3c66f379a1dbb9085d79db3e04).
 3. Read the hook above and diff it against your installed copy.
-4. Run it sandboxed if you would rather — it needs nothing special and will work fine.
+4. Run it sandboxed if you would rather - it needs nothing special and will work fine.
 
 Questions or something that does not match what you observe: **https://discord.gg/PGfmpJMeY5**

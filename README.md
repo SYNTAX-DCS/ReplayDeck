@@ -39,7 +39,8 @@ check.
 - **Record to video** — connect OBS once, then record any mark (or *every* mark, unattended)
   straight to a clip. It seeks, captures the run-up and the moment, and stops on its own
 - **Live events on a timeline** — every launch, hit, kill and ejection appears as it happens,
-  colour-coded and filterable, each with a **go** button that seeks you there. No Tacview needed
+  colour-coded and filterable, each with a **go** button that seeks you there. No Tacview needed.
+  Hover any marker to see what it is
 - **Global hotkeys** — mark, pause and jump between marks without alt-tabbing out of DCS
 - **Unlock restricted tracks** — one click makes a watchable copy of a view-locked
   multiplayer track. Your original is never touched
